@@ -1,0 +1,320 @@
+---
+output:
+  html_document: default
+  pdf_document:
+    latex_engine: xelatex
+  word_document: default
+---
+<div align="center">
+# **<span style='color:#2C3E50;'>SO SÁNH TRUNG BÌNH<br>TRƯỜNG HỢP MẪU GHÉP CẶP</span><br><span style='font-size:28px;'>(Paired T-Test)</span>**
+</div>
+<div style="text-align: justify; text-justify: inter-word;">
+
+## **Cơ sở lý thuyết**
+
+### 1. **Khái niệm Paird T-Test**
+* Paired T-Test (còn gọi là **Dependent Samples T-Test** hoặc **Paired-Samples T-Test**) là phép kiểm định thống kê dùng để so sánh **giá trị trung bình của hai mẫu dữ liệu có liên quan với nhau**.
+
+* Mẫu **có liên quan** nghĩa là dữ liệu được đo trên **cùng một đối tượng** ở hai thời điểm hoặc hai điều kiện khác nhau.
+
+* VD: Đo huyết áp bệnh nhân trước và sau khi lấy máu, điểm số học sinh trước và sau khi tham gia khóa học.
+
+  1. **Định nghĩa**
+    * Paired T-Test kiểm tra xem sự khác biệt trung bình giữa hai tập quan sát có ý nghĩa thống kê hay không.
+    
+    * Về mặt toán học:
+      - Giả thuyết không (H0): μd = 0 (không có sự khác biệt trung bình)
+      - Giả thuyết thay thế (H1): μd ≠ 0 (có sự khác biệt trung bình)
+      - Trong đó, μd là trung bình của hiệu số giữa các cặp quan sát.
+    
+  2. **Nguyên tắc hoạt động**
+    * Tính hiệu số giữa các cặp quan sát.
+      $$
+      d_i = X_{i1} - X_{i2}
+      $$
+      với \( i = 1, 2, \ldots, n \).
+      - *Mục đích:* Đo lường sự thay đổi giữa hai lần đo trên cùng một đối tượng. Biến bài toán hai mẫu phụ thuộc thành một mẫu duy nhất, thay vì so sánh hai mẫu riêng biệt, ta chỉ cần kiểm tra xem trung bình của các hiệu số có khác 0 hay không.
+      
+    * Tính trung bình.
+      $$
+      \bar{d} = \frac{1}{n} \sum_{i=1}^{n} d_i
+      $$
+      - *Mục đích:* Đánh giá mức thay đổi trung bình giữa hai lần đo.
+      
+    * Tính độ lệch chuẩn hiệu số.
+      $$
+      s_d = \sqrt{\frac{1}{n-1} \sum_{i=1}^{n} (d_i - \bar{d})^2}
+      $$
+      - *Mục đích:* Đánh giá mức độ biến thiên (dao động) của sự thay đổi giữa các cặp quan sát.
+      
+    * Tính thống kê t.
+      $$
+      t = \frac{\bar{d}}{s_d / \sqrt{n}}
+      $$
+      - *Mục đích:* Đo lường mức độ khác biệt trung bình so với sai số chuẩn của hiệu số. Giá trị t càng lớn (theo cả hai hướng) thì khả năng bác bỏ giả thuyết không càng cao.
+      
+    * So sánh giá trị t với phân phối Student's t (df = n - 1) để tính p-value.
+    
+  3. **Điều kiện áp dụng**
+    * Dữ liệu là cặp quan sát (paired data).
+    * Hiệu số giữa các cặp quan sát tuân theo phân phối chuẩn (normality of differences).
+    * Mẫu đủ lớn (thông thường n > 30) để áp dụng định lý giới hạn trung tâm.
+    * Dữ liệu đo lường ít nhất ở thang đo khoảng (interval scale).
+    * Các cặp quan sát độc lập với nhau.
+
+  4. **Các chỉ số thống kê**
+    * Giá trị t (t-value): Thống kê t được tính từ dữ liệu mẫu, độ lớn của khác biệt so với sai số chuẩn.
+    * Bậc tự do (degrees of freedom, df): df = n - 1, với n là số cặp quan sát.
+    * Giá trị p (p-value): Xác suất quan sát được thống kê t hoặc lớn hơn nếu giả thuyết không đúng.
+    * Mức ý nghĩa (significance level, α): Ngưỡng để quyết định bác bỏ hay không bác bỏ giả thuyết không (thường là 0.05).Nếu p < α (ví dụ 0.05) → bác bỏ H0, có khác biệt ý nghĩa.
+    * Trung bình hiệu số (mean difference - $\bar{d}$): Trung bình của các hiệu số giữa các cặp quan sát.
+    * Khoảng tin cậy (confidence interval): Khoảng giá trị mà trung bình hiệu số có thể nằm trong đó với một mức độ tin cậy nhất định (thường là 95%).
+    * Kích thước hiệu ứng (effect size): Đo lường mức độ khác biệt giữa hai nhóm, thường sử dụng Cohen's d.
+    
+### 2. **Lý thuyết kiểm định Paired T-Test**
+
+  1. **Quy trình kiểm định Paired T-Test**
+  * Bước 1: Đặt giả thuyết
+    - H₀: μd = 0 (không có sự khác biệt trung bình)
+    - H₁: μd ≠ 0 (có sự khác biệt trung bình)
+    
+  * Bước 2: Tính hiệu số giữa các cặp quan sát.
+      $$
+      d_i = X_{i1} - X_{i2}
+      $$
+      
+  * Bước 3: Kiểm tra giả định phân phối chuẩn của hiệu số (sử dụng biểu đồ Q-Q hoặc kiểm định Shapiro-Wilk).
+    - Lưu ý: 	Shapiro-Wilk test dễ nhạy cảm với mẫu lớn, giá trị ngoại lai và sai lệch nhỏ trong phân phối (skewness, kurtosis).
+    
+  * Bước 4: Chọn mức ý nghĩa (α), thường là 0.05.
+  
+  * Bước 5: Tính thống kê t và p-value.
+      - Thống kê t:
+      $$
+      t = \frac{\bar{d}}{s_d / \sqrt{n}}
+      $$
+      
+      - p-value (two-tailed): được tính bằng xác suất của phân phối t
+      $$
+      p = 2 \times P(T_{df} > |t|)
+      $$
+      
+  * Bước 6: So sánh p-value với α để quyết định bác bỏ hay không bác bỏ H₀.
+  
+  * Bước 7: Kết luận và báo cáo kết quả.
+    - Nếu bác bỏ H₀ → có sự khác biệt có ý nghĩa thống kê giữa 2 lần đo.
+    - Ngoài p-value, cần báo cáo thêm:
+      - Giá trị t và df.
+      - Trung bình hiệu số và khoảng tin cậy.
+      - Kích thước hiệu ứng (effect size).
+        
+  2. **Ưu và nhược điểm của Paired T-Test**
+  * Ưu điểm:
+    * Kiểm soát biến nhiễu (control for individual differences)
+      - Vì so sánh trên cùng một đối tượng ở hai điều kiện/thời điểm → loại bỏ ảnh hưởng của sự khác biệt cá nhân (giới tính, tuổi, khả năng nền tảng).
+      - Giúp tập trung vào tác động thực sự của biến can thiệp.
+
+    * Tăng độ nhạy (higher power)
+      - Biến thiên giữa các cá thể được loại bỏ → phương sai giảm → dễ phát hiện sự khác biệt nhỏ.
+      - Do đó paired t-test thường mạnh hơn independent t-test trong cùng điều kiện.
+
+    * Cần ít mẫu hơn
+      - Vì mỗi đối tượng tự làm “đối chứng” cho chính mình, nên thường cần số lượng mẫu nhỏ hơn để đạt được mức ý nghĩa thống kê.
+      
+    * Ứng dụng rộng rãi trong thực nghiệm
+      - Rất phổ biến trong y học, tâm lý, giáo dục (ví dụ: đo trước–sau can thiệp).
+      
+  * Nhược điểm:
+    * Yêu cầu dữ liệu paired
+      - Không phải lúc nào cũng có thể thu thập dữ liệu trước–sau trên cùng đối tượng.
+      - Một số trường hợp chỉ có hai nhóm độc lập → không dùng được paired t-test.
+
+    * Giả định phân phối chuẩn của hiệu số
+      - Paired t-test yêu cầu hiệu số di (trước–sau) phải phân phối chuẩn.
+      - Nếu dữ liệu lệch hoặc có outliers nhiều → kết quả có thể sai lệch.
+
+    * Nhạy cảm với missing data
+      - Nếu một đối tượng thiếu dữ liệu ở một trong hai lần đo, cả cặp bị loại bỏ. Điều này có thể làm giảm kích thước mẫu đáng kể.
+      
+    * Ảnh hưởng từ carry-over effect
+      - Nếu hai lần đo quá gần nhau hoặc có sự tác động của lần đo trước đến lần đo sau (ví dụ: người tham gia nhớ câu trả lời trước đó) → kết quả có thể bị thiên lệch.
+
+    
+## **Giới thiệu về bài toán**
+
+### 1. **Giới thiệu về data**
+* Tập dữ liệu sau đây có tên là **Hypothermia.csv** chứa thông tin về nhiệt độ cơ thể của bệnh nhân trước và sau khi điều trị hạ thân nhiệt. 
+```{r Introduction to data}
+data = read.csv("Hypothermia.csv")
+
+print(head(data))#In ra 6 dòng đầu tiên
+```
+```{r count samples}
+# Đếm toàn bộ số mẫu ban đầu
+total_samples = nrow(data)
+print(paste("Tổng số mẫu ban đầu:", total_samples))
+```
+Mỗi dòng là một ca phẫu thuật của trẻ sơ sinh. Các biến trong bảng có thể hiểu như sau:
+
+  * case: số thứ tự của ca bệnh.
+
+  * code: mã định danh của bệnh nhân hoặc ca phẫu thuật.
+
+  * date: ngày trong tháng (số, không phải dạng ngày-tháng-năm đầy đủ).
+
+  * time: thời gian bắt đầu (theo giờ:phút).
+
+  * weight: cân nặng của trẻ (gram).
+
+  * t.nur: nhiệt độ đo tại phòng hồi sức sơ sinh (nursery).
+
+  * t.or: nhiệt độ đo tại phòng mổ (operating room).
+
+  * t.1, t.2, t.3, t.4, t.5, t.6: nhiệt độ cơ thể của trẻ đo tại các thời điểm khác nhau trong quá trình phẫu thuật.
+
+    * t.1: lúc bắt đầu phẫu thuật.
+
+    * t.2, t.3, …: các mốc sau đó (thường cách nhau 10–15 phút hoặc theo quy trình phẫu thuật).
+
+    * Một số ca có ít số đo (trống ở các cột sau), vì không phải ca nào cũng đo đủ 6 mốc.
+
+### 2. **Yêu cầu, mục tiêu đặt ra**
+* Mục tiêu: So sánh nhiệt độ cơ thể của bệnh nhân ở lần đo trước và lần đo sau để xác định xem liệu có sự khác biệt có ý nghĩa thống kê giữa hai lần đo này hay không.
+
+## **Thực hành trên R**
+* Các thư viện cần thiết
+```{r import library, echo=TRUE, warning=FALSE, results='hide'}
+library(ggplot2) # Vẽ biểu đồ
+library(ggpubr) # Vẽ biểu đồ Q-Q
+library(effsize) # Tính kích thước hiệu ứng
+```
+
+```{r input, include=FALSE}
+# Hypothermia_Paired_sample_T-Test.R
+# Nhập data
+data = read.csv("Hypothermia.csv")
+```
+
+* Kiểm tra giá trị trùng lặp trong cột code.
+```{r check dup}
+# Kiểm tra giá trị bị trùng
+duplicated_rows = data[duplicated(data), ]
+print(duplicated_rows)
+```
+> **Nhận xét:** Không có dòng nào bị trùng lặp hoàn toàn trong dữ liệu.
+
+* Chỉ giữ lại những biến cần thiết.
+```{r necessary data}
+#Giữ lại các cột cần thiết
+necessary_data = data[, c("code", "t.1", "t.2")]
+print(head(necessary_data))
+```
+> Chúng ta sẽ so sánh nhiệt độ cơ thể của trẻ sơ sinh ở thời điểm trước (t.1) và sau (t.2).
+
+* Kiểm tra giá trị NA trong các cột 'code', 't.1' và 't.2'.
+```{r check NA in necessary data}
+# Sử dụng hàm subset để lọc các dòng có giá trị NA trong cột 'code', 't.1' hoặc 't.2'
+subset(necessary_data, is.na(code) | is.na(t.1) | is.na(t.2))
+```
+> **Nhận xét: **Không có giá trị NA trong cột t.1 và t.2, nhưng xuất hiện giá trị NA trong cột code. Vì các giá trị trong cột t.1 và t.2 không bị thiếu nên chúng ta có thể gán mã giả cho các giá trị NA trong cột 'code' để không làm mất dữ liệu.
+
+* Xử lý giá trị NA trong cột 'code'
+```{r handle NA in code}
+necessary_data$code = ifelse(is.na(necessary_data$code),
+                    paste0("unknown_", seq_len(sum(is.na(necessary_data$code)))),
+                    necessary_data$code)
+print(head(necessary_data))
+```
+> **Nhận xét:** Các giá trị NA trong cột 'code' đã được thay thế bằng các mã định danh tạm thời như "unknown_1", "unknown_2",...
+
+* Vẽ biểu đồ boxplot để hiện thị giá trị ngoại lai của t.1 và t.2
+```{r Vẽ biểu đồ boxplot để hiện thị giá trị ngoại lai của t.1 và t.2}
+# Đưa dữ liệu về dạng long để dễ vẽ
+data_long = data.frame(
+  variable = rep(c("t.1", "t.2"), each = nrow(necessary_data)),
+  value = c(necessary_data$t.1, necessary_data$t.2)
+)
+# Vẽ boxplot hiển thị outliers
+ggplot(data_long, aes(x = variable, y = value, fill = variable)) +
+  geom_boxplot(outlier.color = "red", outlier.size = 3) +
+  labs(title = "Biểu đồ Boxplot thể hiện giá trị ngoại lai",
+       x = "Biến quan sát", y = "Giá trị") +
+  theme_minimal(base_size = 14) +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+> **Nhận xét:** Biểu đồ boxplot không hiển thị giá trị ngoại lai đáng kể trong cả hai cột t.1 và t.2.Tại biến t.1, có một số điểm nằm ngoài râu của hộp, nhưng không quá xa so với phần còn lại của dữ liệu. Tương tự, biến t.2 cũng không có giá trị ngoại lai rõ ràng.
+
+* Tính hiệu số giữa hai cột t.1 và t.2.
+```{r diff}
+# Tính hiệu số giữa hai cột t1 và t2
+necessary_data$diff = necessary_data$t.2 - necessary_data$t.1
+print(head(necessary_data))
+```
+
+* Tính trung bình và độ lệch chuẩn của hiệu số.
+```{r mean and sd}
+#Tính trung bình của hiệu số
+mean_diff = mean(necessary_data$diff)
+print(paste("Giá trị trung bình: ", mean_diff))
+
+#Tính độ lệnh chuẩn của hiệu số
+sd_diff = sd(necessary_data$diff)
+print(paste("Độ lệch chuẩn: ", sd_diff))
+```
+> **Nhận xét:** Giá trị trung bình hiệu số dương (mean_diff > 0) cho thấy nhiệt độ sau điều trị (t.2) cao hơn trước điều trị (t.1) trung bình khoảng 1.125 độ C.
+
+* Kiểm tra phân phối chuẩn bằng Shapiro-Wilk test.
+```{r Shapiro-Wilk test}
+# Kiểm tra phân phối chuẩn của hiệu số
+shapiro_test = shapiro.test(necessary_data$diff)
+print(shapiro_test)
+```
+> **Nhận xét:** Nếu W tiến gần bằng 1 thì thể hiện dữ liệu gần với phân phối chuẩn. Giá trị p-value > 0.05 cho thấy không có bằng chứng để bác bỏ giả thuyết rằng hiệu số giữa hai lần đo tuân theo phân phối chuẩn.
+
+* Kiểm tra phân phối chuẩn và hiển thị giá trị ngoại lai.
+```{r}
+# Kiểm tra phân phối chuẩn bằng biểu đồ Q-Q
+ggqqplot(necessary_data$diff) +
+  stat_qq_line(color = "red") #các điểm bám sát đường thẳng đỏ → dữ liệu chuẩn.
+```
+
+> **Nhận xét:** Biểu đồ Q-Q cho thấy các điểm gần như bám sát đường thẳng đỏ, cho thấy hiệu số giữa hai lần đo gần như tuân theo phân phối chuẩn.
+
+```{r}
+#Dùng gói ggplot2 để đẹp hơn để hiển thị giá trị ngoại lai
+ggplot(necessary_data, aes(y = diff)) +
+  geom_boxplot(fill = "lightblue", outlier.colour = "red", outlier.size = 3) +
+  labs(title = "Boxplot with Outliers", y = "diff (t.2 - t.1)")
+```
+
+> **Nhận xét: **Biểu đồ boxplot không hiển thị giá trị ngoại lai đáng kể.
+
+* Tính thống kê t-test.
+```{r t-test}
+#Kiểm định t-test
+t.test(necessary_data$t.2, necessary_data$t.1, paired = TRUE)
+```
+> **Nhận xét: **
+
+    - Giá trị t = 16.072 với df = 199 cho thấy sự khác biệt trung bình là đáng kể. Giá trị thống kê t càng lớn (theo cả hai hướng) thì khả năng bác bỏ giả thuyết không càng cao.
+    - Giá trị p-value < 0.05 → bác bỏ H0, có sự khác biệt có ý nghĩa thống kê giữa nhiệt độ trước (t.1) và sau (t.2) khi điều trị hạ thân nhiệt ở trẻ sơ sinh.
+    - alternative hypothesis: true mean difference is not equal to 0 nghĩa là đã chạy kiểm định hai phía (two-tailed): H₀: μ_d = 0; H₁: μ_d ≠ 0.
+    - 95 percent confidence interval: 0.9869648 1.2630352. Khoảng tin cậy 95% cho hiệu trung bình thực sự (μ_d) nằm trong khoảng [0.987, 1.263]. Vì toàn bộ khoảng nằm trên 0, điều này phù hợp với kết luận p nhỏ: trung bình t.2 - t.1 dương và khác 0.
+
+* Tính kích thước hiệu ứng (effect size).
+```{r effect size}
+#Effect size
+cohen.d(necessary_data$t.2, necessary_data$t.1, paired = TRUE)
+```
+> **Nhận xét: **
+
+    - d estimate: 1.594657 nghĩa là ước lượng kích thước hiệu ứng Cohen's d là khoảng 1.595.
+    - (large) — nhãn diễn giải theo quy ước Cohen: 0.2 nhỏ, 0.5 trung bình, 0.8 lớn; 1.59 là rất lớn.
+    - 95 percent confidence interval: [1.300668, 1.888645] đây là khoảng tin cậy 95% cho d; tức là 95% tin d thực sự nằm trong khoảng này.Khoảng tin cậy không chứa 0, vì vậy hiệu ứng có ý nghĩa thống kê và thực tiễn.
+
+## **Kết luận**
+  Nhiệt độ cơ thể của trẻ sơ sinh sau khi điều trị hạ thân nhiệt (t.2) cao hơn đáng kể so với trước khi điều trị (t.1), với mức tăng trung bình khoảng 1.125 độ C.
+</div>
+
+
